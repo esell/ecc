@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+    <head><title>asdf</title></head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+    <body>
+        <br/><br/>
+        <div class="container">
+            {{if .IsClaimed}}
+            <div class="alert alert-danger" role="alert">
+                <b>This page is claimed. You can still use the encode/decode functions, but in order to change the cipher you will need to know the secret.</b>
+            </div>
+            {{else}}
+            <div class="alert alert-success" role="alert">
+                <b>This page is NOT claimed, set a secret to claim it!</b>
+            </div>
+            {{end}}
+            <br/>
+            <form action="/{{ .Path}}/save" method="POST">
+                <div class="form-group">
+                    <table class="table-responsive">
+                        <tr>
+                            {{ range $k, $v := .ValueMap}}
+                            <td class="text-center">{{ $k }}</td>
+                            {{ end }}
+                        </tr>
+                        <tr>
+                            {{ range $k, $v := .ValueMap}}
+                            <td class="text-center"><input class="form-control" type="text" size="1" maxlength="1" id= "{{$k}}" name="{{$k}}" value="{{$v}}"></td>
+                            {{ end }}
+                        </tr>
+                    </table>
+                </div>
+                <div class="form-group">
+                    <label>Secret:</label>
+                    <input class="form-control" type="password" name="pathPass">
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-lg btn-primary" type="submit" value="Save Code">
+                    {{if .ErrorMsg}}
+                    <div class="alert alert-danger" role="alert" id="errMsg" name="errMsg">
+                        {{ .ErrorMsg}}
+                    </div>
+                    {{end}}
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <br /><br />
+            <h1>Encode</h1>
+            <div class="input-group">
+                <form action="/{{ .Path}}/encode" method="POST">
+                    <label>Input:</label>
+                    <input class="form-control" type="text" name="encInput">
+                    <br />
+                    <div name="encOutput" id="encOutput">
+                        {{if .EncodedVal}}
+                        Encoded text: {{ .EncodedVal}}
+                        {{end}}
+                    </div>
+                    <br />
+                    <input class="btn btn-lg btn-primary" type="submit" value="Encode!">
+                </form>
+            </div>
+        </div>
+        <br />
+        <div class="container">
+            <h1>Decode</h1>
+            <div class="input-group">
+                <form action="/{{ .Path}}/decode"  method="POST">
+                    <label>Input:</label>
+                    <input class="form-control" type="text" name="decInput">
+                    <br />
+                    <div name="decOutput" id="decOutput">
+                        {{if .DecodedVal}}
+                        Decoded text: {{ .DecodedVal}}
+                        {{end}}
+                    </div>
+                    <br />
+                    <input class="btn btn-lg btn-primary" type="submit" value="Decode!">
+                </form>
+            </div>
+        </div>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    </body>
+</html>
